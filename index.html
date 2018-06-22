@@ -1,0 +1,45 @@
+
+<head>
+	<link rel="stylesheet" type="text/css" href="filesystem.css">
+</head>
+
+<body>
+	<ul>
+		<h3>Alocar novo arquivo:</h3>
+		<li>
+			<label>Nome:</label>
+			<input type="text" name="prop_name">
+		</li>
+		<li>
+			<label>É diretório?</label>
+			<input type="checkbox" name="prop_directory">
+		</li>
+		<li>
+			<label>Tamanho:</label>
+			<input type="text" name="prop_size" value="8192">
+			<label> bytes</label>
+		</li>
+		<li>
+			<button id="alocate_data">Alocar</button>
+		</li>
+	</ul>
+
+
+	<ul>
+		<h3>Acessar arquivo:</h3>
+		<li>
+			<label>ID:</label>
+			<input type="text" name="prop_id">
+		</li>
+		<li>
+			<button id="alocate_data">Acessar</button>
+		</li>
+	</ul>
+	
+
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.min.js"></script>
+	<script type="text/javascript" src="basics.js"></script>
+	<script type="text/javascript" src="filesystem.js"></script>
+</body>
