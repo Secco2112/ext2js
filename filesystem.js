@@ -33,6 +33,7 @@ $(document).ready(function(){
 
 	form_manipulation();
 	save_data();
+	find_data();
 
 
 	for(var i=0; i<max_size; i++){
@@ -40,19 +41,19 @@ $(document).ready(function(){
 	}
 
 
-	for(var i=0; i<rows; i++){
+	for(var i=0; i<cols; i++){
 		memory[i] = [];
 	}
 
-	for(var i=0; i<rows; i++){
-		for(var j=0; j<cols; j++){
+	for(var i=0; i<cols; i++){
+		for(var j=0; j<rows; j++){
 			memory[i][j] = {};
 			memory[i][j].used = 0;
 		}
 	}
 	
 
-	function form_manipulation(){
+	function form_manipulation() {
 		$("input[name=prop_directory]").on("change", function(){
 			var isChecked = $(this).is(":checked");
 			if(isChecked) {
@@ -67,46 +68,89 @@ $(document).ready(function(){
 
 
 
-	function save_data(){
+	function save_data() {
 		$("#alocate_data").on("click", function(e){
 			var name = $("input[name=prop_name]").val(),
 				is_directory = $("input[name=prop_directory]").is(":checked"),
 				size = $("input[name=prop_size]").val(),
 				today = new Date(Date.now()).toLocaleString().split(', ')[0];
+
+			if(name && size) {
+				var column_to_insert = get_first_id_column_available();
+				_filesystem[column_to_insert] = 1;
+				var random_color = get_random_color();
+
 			
-			var column_to_insert = get_first_id_column_available();
-			_filesystem[column_to_insert] = 1;
-			var random_color = get_random_color();
+				if(column_to_insert || column_to_insert==0) {
 
-			if(column_to_insert || column_to_insert==0) {
+					var tamanho = parseInt(size) / 4096;
 
-				var tamanho = parseInt(size) / 4096;
+					
+					for(var i=0; i<tamanho; i++) {
+						var position = get_random_position_to_insert();
 
-				
-				for(var i=0; i<tamanho; i++) {
-					var position = get_position_to_insert();
+						// get_random_position_to_insert();
 
-					memory[position.row][position.col].id = column_to_insert;
-					memory[position.row][position.col].used = 1;
-					memory[position.row][position.col].name = name;
-					if(i==0){
-						textSize(22);
-						fill(random_color);
-						if(position.row > 6) {
-							position.row = 0;
-							position.col++;
+						memory[position.row][position.col].id = column_to_insert;
+						memory[position.row][position.col].used = 1;
+						memory[position.row][position.col].name = name;
+						memory[position.row][position.col].size = size;
+						memory[position.row][position.col].block_count = tamanho;
+						memory[position.row][position.col].position = {row: position.col, col: position.row};
+						if(i==0){
+							textSize(20);
+							fill(random_color);
+							text(name, position.row*70, position.col*70, 70, 70);
+
+							memory[position.row][position.col].info = 1;
+						} else {
+							rect(position.row*70, position.col*70, 70, 70);
+
+							memory[position.row][position.col].info = 0;
 						}
-						text(name, position.row*70, position.col*70, 70, 70);
-					} else {
-						rect(position.row*70, position.col*70, 70, 70);
 					}
-				}
 
-				textSize(12);
-				text("id: " + column_to_insert + "\nname:" + name, 0, column_to_insert*70, 70, 70);
+					textSize(12);
+					text("id: " + column_to_insert + "\nname:" + name, 0, column_to_insert*70, 70, 70);
+				}
 			}
 		});
 	}
 
+
+	function find_data() {
+ 		$("#find_data").on("click", function(e){
+ 			var id = $("#findId").val();
+
+ 			if(id){
+ 				if(check_id_exists(id)) {
+ 					var blocks = get_blocks_with_id(id);
+
+ 					console.log(blocks);
+ 				} else {
+
+ 				}
+ 			}
+ 		});
+	}
+
 });
+
+
+(function() {
+  	'use strict';
+  	window.addEventListener('load', function() {
+    	var forms = document.getElementsByClassName('needs-validation');
+    	
+    	var validation = Array.prototype.filter.call(forms, function(form) {
+      		form.addEventListener('submit', function(event) {
+        		if (form.checkValidity() === false) {
+          			event.preventDefault();
+          			event.stopPropagation();
+        		}
+        		form.classList.add('was-validated');
+      		}, false);
+		});
+  	}, false);
+})();
 

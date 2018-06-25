@@ -1,4 +1,4 @@
-function get_first_id_column_available(){
+function get_first_id_column_available() {
 	var returned_column = null;
 	for(var i=0; i<_filesystem.length; i++){
 		var el = _filesystem[i];
@@ -28,19 +28,54 @@ function get_random_color() {
 }
 
 
-function get_position_to_insert(){
-	for(var i=0; i<rows; i++) {
-		for(var j=0; j<cols; j++) {
+function get_position_to_insert() {
+	for(var i=0; i<cols; i++) {
+		for(var j=0; j<rows; j++) {
 			if(i != 0) {
 				if(memory[i][j].used == 0) {
-					if(i > 6) {
-						i=0;
-						j++;
-					}
 					return {row: i, col: j};
 				}
 			}
 		}
 	}
 	return null;
+}
+
+
+function get_random_position_to_insert() {
+	var column = Math.floor((Math.random() * 16) + 1);
+	var row = Math.floor((Math.random() * 6) + 1);
+
+	while(memory[column][row].used == 1) {
+		column = Math.floor((Math.random() * 16) + 1);
+		row = Math.floor((Math.random() * 6) + 1);
+	}
+
+	return {row: column, col: row};
+}
+
+
+function check_id_exists(id) {
+	return _filesystem[id] == 1;
+}
+
+
+function get_blocks_with_id(id) {
+	var blocks = { main: [], secondary: []};
+
+	for(var i=0; i<cols; i++) {
+		for(var j=0; j<rows; j++) {
+			if(i != 0) {
+				if(memory[i][j].id == id) {
+					if(memory[i][j].info == 1) {
+						blocks.main.push(memory[i][j]);
+					} else {
+						blocks.secondary.push(memory[i][j]);
+					}
+				}
+			}
+		}
+	}
+
+	return blocks;
 }
