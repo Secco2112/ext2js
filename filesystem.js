@@ -36,11 +36,14 @@ $(document).ready(function(){
 	find_data();
 
 
+	// Monta e alimenta objeto do filesystem
 	for(var i=0; i<max_size; i++){
-		_filesystem.push(0);
+		_filesystem[i] = {};
+		_filesystem[i].used = 0;
 	}
 
 
+	// Monta e alimenta objeto da memória
 	for(var i=0; i<cols; i++){
 		memory[i] = [];
 	}
@@ -77,8 +80,12 @@ $(document).ready(function(){
 
 			if(name && size) {
 				var column_to_insert = get_first_id_column_available();
-				_filesystem[column_to_insert] = 1;
+				_filesystem[column_to_insert].used = 1;
+				_filesystem[column_to_insert].id = column_to_insert;
+				_filesystem[column_to_insert].name = name;
+
 				var random_color = get_random_color();
+				_filesystem[column_to_insert].color = random_color;
 
 			
 				if(column_to_insert || column_to_insert==0) {
@@ -97,6 +104,7 @@ $(document).ready(function(){
 						memory[position.row][position.col].size = size;
 						memory[position.row][position.col].block_count = tamanho;
 						memory[position.row][position.col].position = {row: position.col, col: position.row};
+						memory[position.row][position.col].color = random_color;
 						if(i==0){
 							textSize(20);
 							fill(random_color);
@@ -111,7 +119,7 @@ $(document).ready(function(){
 					}
 
 					textSize(12);
-					text("id: " + column_to_insert + "\nname:" + name, 0, column_to_insert*70, 70, 70);
+					text("id: " + column_to_insert + "\nname: " + name, 0, column_to_insert*70, 70, 70);
 				}
 			}
 		});
@@ -126,9 +134,22 @@ $(document).ready(function(){
  				if(check_id_exists(id)) {
  					var blocks = get_blocks_with_id(id);
 
- 					console.log(blocks);
- 				} else {
+ 					var filesystem_data = blocks.filesystem[0];
 
+ 					// Limpa o bloco
+ 					fill(255, 255, 255);
+ 					rect(0, filesystem_data.id*70, 70, 70);
+
+
+ 					// Aplica borda no filesystem
+ 					strokeWeight(4);
+ 					stroke('#222222');
+ 					fill(filesystem_data.color);
+ 					textSize(12);
+ 					text("id: " + filesystem_data.id + "\nname: " + filesystem_data.name, 0, filesystem_data.id*70, 70, 70);
+ 					
+ 				} else {
+ 					alert("O arquivo não foi encontrado.");
  				}
  			}
  		});

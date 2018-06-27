@@ -1,7 +1,7 @@
 function get_first_id_column_available() {
 	var returned_column = null;
 	for(var i=0; i<_filesystem.length; i++){
-		var el = _filesystem[i];
+		var el = _filesystem[i].used;
 		if(el == 0){
 			returned_column = i;
 			break;
@@ -56,12 +56,12 @@ function get_random_position_to_insert() {
 
 
 function check_id_exists(id) {
-	return _filesystem[id] == 1;
+	return _filesystem[id].used == 1;
 }
 
 
 function get_blocks_with_id(id) {
-	var blocks = { main: [], secondary: []};
+	var blocks = { filesystem: [], main: [], secondary: []};
 
 	for(var i=0; i<cols; i++) {
 		for(var j=0; j<rows; j++) {
@@ -73,6 +73,14 @@ function get_blocks_with_id(id) {
 						blocks.secondary.push(memory[i][j]);
 					}
 				}
+			}
+		}
+	}
+
+	for(var i=0; i<_filesystem.length; i++) {
+		if(_filesystem[i].id == id) {
+			if(_filesystem[i].used == 1) {
+				blocks.filesystem.push(_filesystem[i]);
 			}
 		}
 	}
