@@ -44,11 +44,11 @@ function get_position_to_insert() {
 
 function get_random_position_to_insert() {
 	var column = Math.floor((Math.random() * 16) + 1);
-	var row = Math.floor((Math.random() * 6) + 1);
+	var row = Math.floor((Math.random() * 7));
 
 	while(memory[column][row].used == 1) {
 		column = Math.floor((Math.random() * 16) + 1);
-		row = Math.floor((Math.random() * 6) + 1);
+		row = Math.floor((Math.random() * 7));
 	}
 
 	return {row: column, col: row};

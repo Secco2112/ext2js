@@ -2,8 +2,8 @@ var	cols = 17,
 	rows = 7,
 	colors = [],
 	_filesystem = [],
-	max_size = rows,
-	total_places;
+	max_size = 96,
+	used_places = 0;
 
 var memory = [];
 
@@ -31,13 +31,14 @@ $(document).ready(function(){
 		block_size = 4096;
 
 
-	form_manipulation();
+	// form_manipulation();
 	save_data();
 	find_data();
+	delete_data();
 
 
 	// Monta e alimenta objeto do filesystem
-	for(var i=0; i<max_size; i++){
+	for(var i=0; i<rows; i++){
 		_filesystem[i] = {};
 		_filesystem[i].used = 0;
 	}
@@ -80,46 +81,51 @@ $(document).ready(function(){
 
 			if(name && size) {
 				var column_to_insert = get_first_id_column_available();
-				_filesystem[column_to_insert].used = 1;
-				_filesystem[column_to_insert].id = column_to_insert;
-				_filesystem[column_to_insert].name = name;
 
-				var random_color = get_random_color();
-				_filesystem[column_to_insert].color = random_color;
-
-			
 				if(column_to_insert || column_to_insert==0) {
-
 					var tamanho = parseInt(size) / 4096;
+					if(used_places + tamanho <= max_size) {
+						used_places += tamanho;
 
-					
-					for(var i=0; i<tamanho; i++) {
-						var position = get_random_position_to_insert();
+						_filesystem[column_to_insert].used = 1;
+						_filesystem[column_to_insert].id = column_to_insert;
+						_filesystem[column_to_insert].name = name;
 
-						// get_random_position_to_insert();
+						var random_color = get_random_color();
+						_filesystem[column_to_insert].color = random_color;
+						
+						
+						
+						for(var i=0; i<tamanho; i++) {
+							var position = get_random_position_to_insert();
 
-						memory[position.row][position.col].id = column_to_insert;
-						memory[position.row][position.col].used = 1;
-						memory[position.row][position.col].name = name;
-						memory[position.row][position.col].size = size;
-						memory[position.row][position.col].block_count = tamanho;
-						memory[position.row][position.col].position = {row: position.col, col: position.row};
-						memory[position.row][position.col].color = random_color;
-						if(i==0){
-							textSize(20);
-							fill(random_color);
-							text(name, position.row*70, position.col*70, 70, 70);
+							// get_random_position_to_insert();
 
-							memory[position.row][position.col].info = 1;
-						} else {
-							rect(position.row*70, position.col*70, 70, 70);
+							memory[position.row][position.col].id = column_to_insert;
+							memory[position.row][position.col].used = 1;
+							memory[position.row][position.col].name = name;
+							memory[position.row][position.col].size = size;
+							memory[position.row][position.col].block_count = tamanho;
+							memory[position.row][position.col].position = {row: position.col, col: position.row};
+							memory[position.row][position.col].color = random_color;
+							if(i==0){
+								textSize(20);
+								fill(random_color);
+								text(name, position.row*70, position.col*70, 70, 70);
 
-							memory[position.row][position.col].info = 0;
+								memory[position.row][position.col].info = 1;
+							} else {
+								rect(position.row*70, position.col*70, 70, 70);
+
+								memory[position.row][position.col].info = 0;
+							}
 						}
-					}
 
-					textSize(12);
-					text("id: " + column_to_insert + "\nname: " + name, 0, column_to_insert*70, 70, 70);
+						textSize(12);
+						text("id: " + column_to_insert + "\nname: " + name, 0, column_to_insert*70, 70, 70);
+					} else {
+						alert("Tamanho indisponível na memória.");
+					}
 				}
 			}
 		});
@@ -130,29 +136,73 @@ $(document).ready(function(){
  		$("#find_data").on("click", function(e){
  			var id = $("#findId").val();
 
- 			if(id){
+ 			if(id) {
  				if(check_id_exists(id)) {
  					var blocks = get_blocks_with_id(id);
 
- 					var filesystem_data = blocks.filesystem[0];
-
- 					// Limpa o bloco
- 					fill(255, 255, 255);
- 					rect(0, filesystem_data.id*70, 70, 70);
-
-
- 					// Aplica borda no filesystem
- 					strokeWeight(4);
- 					stroke('#222222');
- 					fill(filesystem_data.color);
- 					textSize(12);
- 					text("id: " + filesystem_data.id + "\nname: " + filesystem_data.name, 0, filesystem_data.id*70, 70, 70);
+ 					
  					
  				} else {
  					alert("O arquivo não foi encontrado.");
  				}
  			}
  		});
+	}
+
+
+
+	function delete_data() {
+		$("#delete_data").on("click", function(e){
+			var id = $("#deleteId").val();
+
+			if(id) {
+				if(check_id_exists(id)) {
+					fill("#fff");
+					var blocks = get_blocks_with_id(id);
+
+
+					// Bloco do filesystem
+					var fs_block = blocks.filesystem;
+					if(fs_block.length > 0) {
+						fs_block = fs_block[0];
+						rect(0, fs_block.id*70, 70, 70);
+
+						_filesystem[fs_block.id].used = 0;
+					}
+
+					// Bloco principal na memória
+					var main_block = blocks.main;
+					if(main_block.length > 0) {
+						for(var i=0; i<main_block.length; i++) {
+							rect(main_block[i].position.col*70, main_block[i].position.row*70, 70, 70);
+
+							memory[main_block[i].position.col][main_block[i].position.row].used = 0;
+						}
+					}
+
+					// Blocos "coloridos" da memória
+					var secondary_blocks = blocks.secondary;
+					if(secondary_blocks.length > 0) {
+						for(var i=0; i<secondary_blocks.length; i++) {
+							rect(secondary_blocks[i].position.col*70, secondary_blocks[i].position.row*70, 70, 70);
+
+							memory[secondary_blocks[i].position.col][secondary_blocks[i].position.row].used = 0;
+						}
+					}
+
+
+					// Decrementa número de blocos disponíveis
+					used_places -= main_block[0].block_count;
+
+
+					setTimeout(function(){
+						$(".delete-button").trigger("click");
+					}, 1000);
+				} else {
+					alert("O arquivo não foi encontrado.");
+				}
+			}
+		});
 	}
 
 });
