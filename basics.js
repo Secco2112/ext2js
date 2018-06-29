@@ -55,6 +55,26 @@ function get_random_position_to_insert() {
 }
 
 
+function get_next_position_to_insert(position) {
+	var row = position.col;
+	var column = position.row;
+
+	row++;
+
+	if(row > 6) {
+		if(column + 1 > 16) {
+			row = 0;
+			column = 1;
+		} else {
+			row = 0;
+			column++;
+		}
+	}
+
+	return {row: column, col: row};
+}
+
+
 function check_id_exists(id) {
 	var flag = 0;
 	$.each(_filesystem, function(i, el){
@@ -96,6 +116,6 @@ function get_blocks_with_id(id) {
 
 
 function getDateTimeFromTimestamp(unixTimeStamp) {
-    var date = new Date(unixTimeStamp);
+    var date = new Date();
     return ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear() + ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2);
 }

@@ -98,28 +98,42 @@ $(document).ready(function(){
 						_filesystem[column_to_insert].color = random_color;
 						
 						
-						
+						var last_position;
 						for(var i=0; i<tamanho; i++) {
-							var position = get_random_position_to_insert();
+							if(i==0) {
+								var position = get_random_position_to_insert();
+								last_position = position;
 
-							// get_random_position_to_insert();
+								memory[position.row][position.col].id = id;
+								memory[position.row][position.col].used = 1;
+								memory[position.row][position.col].name = name;
+								memory[position.row][position.col].size = size;
+								memory[position.row][position.col].block_count = tamanho;
+								memory[position.row][position.col].position = {row: position.col, col: position.row};
+								memory[position.row][position.col].color = random_color;
+								memory[position.row][position.col].date_time = getDateTimeFromTimestamp();
 
-							memory[position.row][position.col].id = id;
-							memory[position.row][position.col].used = 1;
-							memory[position.row][position.col].name = name;
-							memory[position.row][position.col].size = size;
-							memory[position.row][position.col].block_count = tamanho;
-							memory[position.row][position.col].position = {row: position.col, col: position.row};
-							memory[position.row][position.col].color = random_color;
-							var date = new Date();
-							memory[position.row][position.col].date_time = getDateTimeFromTimestamp(date);
-							if(i==0){
 								textSize(20);
 								fill(random_color);
 								text(name, position.row*70, position.col*70, 70, 70);
 
 								memory[position.row][position.col].info = 1;
 							} else {
+								var position = get_next_position_to_insert(last_position);
+								while(memory[position.row][position.col].used == 1) {
+									position = get_next_position_to_insert(position);
+								}
+								last_position = position;
+
+								memory[position.row][position.col].id = id;
+								memory[position.row][position.col].used = 1;
+								memory[position.row][position.col].name = name;
+								memory[position.row][position.col].size = size;
+								memory[position.row][position.col].block_count = tamanho;
+								memory[position.row][position.col].position = {row: position.col, col: position.row};
+								memory[position.row][position.col].color = random_color;
+								memory[position.row][position.col].date_time = getDateTimeFromTimestamp();
+
 								rect(position.row*70, position.col*70, 70, 70);
 
 								memory[position.row][position.col].info = 0;
@@ -224,7 +238,6 @@ $(document).ready(function(){
 					setTimeout(function(){
 						$(".delete-button").trigger("click");
 					}, 1000);
-					console.log(_filesystem);
 				} else {
 					alert("O arquivo não foi encontrado.");
 				}
