@@ -111,3 +111,14 @@ body {
 .hint{
 	font-size: 13px;
 }
+
+.file-info{
+
+}
+.file-info legend{
+	font-size: 16px;
+}
+.file-info .form-group p{
+    line-height: 23px;
+    margin-bottom: 0;
+}

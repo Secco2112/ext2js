@@ -74,6 +74,8 @@ $(document).ready(function(){
 
 	function save_data() {
 		$("#alocate_data").on("click", function(e){
+			$(".file-info").hide();
+
 			var name = $("input[name=prop_name]").val(),
 				is_directory = $("input[name=prop_directory]").is(":checked"),
 				size = $("input[name=prop_size]").val(),
@@ -88,12 +90,12 @@ $(document).ready(function(){
 						used_places += tamanho;
 
 						_filesystem[column_to_insert].used = 1;
-						_filesystem[id].column = column_to_insert;
-						_filesystem[id].id = id;
-						_filesystem[id].name = name;
+						_filesystem[column_to_insert].column = column_to_insert;
+						_filesystem[column_to_insert].id = id;
+						_filesystem[column_to_insert].name = name;
 
 						var random_color = get_random_color();
-						_filesystem[id].color = random_color;
+						_filesystem[column_to_insert].color = random_color;
 						
 						
 						
@@ -148,10 +150,18 @@ $(document).ready(function(){
  					if(blocks.main.length > 0) {
  						var tamanho = block_size * (blocks.main[0].size / block_size)
  						var data = blocks.main[0].date_time;
- 						var name = blocks.main[0].name;
- 						var numero_blocos = blocks.main[0].block_count;
+ 						var nome = blocks.main[0].name;
+ 						var numero_blocos = Math.ceil(blocks.main[0].block_count);
 
- 						
+ 						$(".file-info .form-group").empty();
+
+ 						$(".file-info .form-group").append("<p>- <strong>ID:</strong> " + id + ";</p>");
+ 						$(".file-info .form-group").append("<p>- <strong>Nome:</strong> " + nome + ";</p>");
+ 						$(".file-info .form-group").append("<p>- <strong>Tamanho do arquivo:</strong> " + tamanho + ";</p>");
+ 						$(".file-info .form-group").append("<p>- <strong>Data de criação:</strong> " + data + ";</p>");
+ 						$(".file-info .form-group").append("<p>- <strong>Número de blocos alocados:</strong> " + numero_blocos + ".</p>");
+
+ 						$(".file-info").show();
  					}					
  				} else {
  					alert("O arquivo não foi encontrado.");
@@ -164,6 +174,7 @@ $(document).ready(function(){
 
 	function delete_data() {
 		$("#delete_data").on("click", function(e){
+			$(".file-info").hide();
 			var id = $("#deleteId").val();
 
 			if(id) {
@@ -179,6 +190,10 @@ $(document).ready(function(){
 						rect(0, fs_block.column*70, 70, 70);
 
 						_filesystem[fs_block.column].used = 0;
+						delete _filesystem[fs_block.column].id;
+						delete _filesystem[fs_block.column].name;
+						delete _filesystem[fs_block.column].color;
+						delete _filesystem[fs_block.column].column;
 					}
 
 					// Bloco principal na memória
@@ -209,6 +224,7 @@ $(document).ready(function(){
 					setTimeout(function(){
 						$(".delete-button").trigger("click");
 					}, 1000);
+					console.log(_filesystem);
 				} else {
 					alert("O arquivo não foi encontrado.");
 				}
