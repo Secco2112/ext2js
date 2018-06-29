@@ -79,7 +79,20 @@
 				</div>
 
 				<div class="modal-body">
-					<p><!-- TEXTO AQUI --></p>
+					<p>Existem vários métodos diferentes adotados por diferentes Sistemas de Arquivos para gerenciar a
+						alocação de espaço em disco para um novo arquivo, nesta visualização demonstraremos a alocação em
+						sequência contínua.</p>
+					<p>Após a seleção de um bloco, a tabela de ID é alimentada com um número identificador único (id),
+						algumas informações do arquivo e um apontamento para o primeiro bloco do arquivo na memória.
+						Neste primeiro bloco, serão escritos os atributos do arquivo seguido de seus dados. Caso seu
+						tamanho em Bytes exceda o tamanho do Bloco, um novo bloco será alocado, e no final do anterior estará
+						um novo apontamento para o próximo.
+					<p>A quantidade (e quais) atributos que ficam na Tabela de IDS ou nos Blocos dos Arquivos varia
+						entre os Sistema de Arquivos. Exemplos desses atributos são: diretório pai, qual usuário criou, data de
+						criação, tamanho, etc..</p>
+					<p>É importante lembrar, que um diretório também é um arquivo! A diferença é que em seu conteúdo
+						mudam-se alguns atributos e em vez de conter dados como Caracteres ou inteiros, contém o ID dos
+						arquivos que estão contidos nele na estrutura de pastas visuais ao usuário.</p>
 				</div>
 			</div>
 		</div>
@@ -98,7 +111,9 @@
 				</div>
 
 				<div class="modal-body">
-					<p><!-- TEXTO AQUI --></p>
+					<p>O Sistema de Arquivos acessa os dados referente ao arquivo requerido buscando primeiramente
+						na tabela de ID e através dos diversos apontamentos de endereço, percorre todos os seus blocos
+						retornando os seus dados ao Sistema Operacional, que requisitou a chamada de leitura.</p>
 				</div>
 			</div>
 		</div>
