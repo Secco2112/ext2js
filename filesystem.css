@@ -74,7 +74,7 @@
 	margin: 0;
 }
 
-.access-button, .delete-button {
+.allocate-button, .access-button, .delete-button {
 	display: none;
 	opacity: 0;
 	visibility: hidden;

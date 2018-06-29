@@ -2,10 +2,17 @@ var	cols = 17,
 	rows = 7,
 	colors = [],
 	_filesystem = [],
-	max_size = 96,
+	max_size = 112,
 	used_places = 0;
 
 var memory = [];
+
+var last_position, position;
+
+
+var FLAG_MOSTRA_ALOCACAO = true,
+	FLAG_MOSTRA_ACESSO = true,
+	FLAG_MOSTRA_EXCLUSAO = true;
 
 
 
@@ -85,7 +92,8 @@ $(document).ready(function(){
 				var column_to_insert = get_first_id_column_available();
 
 				if(column_to_insert || column_to_insert==0) {
-					var tamanho = parseInt(size) / block_size;
+					var tamanho = Math.ceil(parseInt(size) / block_size);
+
 					if(used_places + tamanho <= max_size) {
 						used_places += tamanho;
 
@@ -97,11 +105,22 @@ $(document).ready(function(){
 						var random_color = get_random_color();
 						_filesystem[column_to_insert].color = random_color;
 						
-						
-						var last_position;
+
 						for(var i=0; i<tamanho; i++) {
 							if(i==0) {
-								var position = get_random_position_to_insert();
+								//var position = get_random_position_to_insert();
+								// if(id == 0) {
+								// 	position = {row: 1, col: 0};
+								// } else {
+								// 	position = get_next_position_to_insert(last_position);
+								// 	while(memory[position.row][position.col].used == 1) {
+								// 		position = get_next_position_to_insert(position);
+								// 	}
+								// }
+								position = {row: 1, col: 0};
+								while(memory[position.row][position.col].used == 1) {
+									position = get_next_position_to_insert(position);
+								}
 								last_position = position;
 
 								memory[position.row][position.col].id = id;
@@ -144,6 +163,15 @@ $(document).ready(function(){
 						text("id: " + id + "\nname: " + name, 0, column_to_insert*70, 70, 70);
 
 						id++;
+
+
+						if(FLAG_MOSTRA_ALOCACAO) {
+							FLAG_MOSTRA_ALOCACAO = false;
+
+							setTimeout(function(){
+								$(".allocate-button").trigger("click");
+							}, 1000);
+						}
 					} else {
 						alert("Tamanho indisponível na memória.");
 					}
@@ -171,13 +199,22 @@ $(document).ready(function(){
 
  						$(".file-info .form-group").append("<p>- <strong>ID:</strong> " + id + ";</p>");
  						$(".file-info .form-group").append("<p>- <strong>Nome:</strong> " + nome + ";</p>");
- 						$(".file-info .form-group").append("<p>- <strong>Tamanho do arquivo:</strong> " + tamanho + ";</p>");
+ 						$(".file-info .form-group").append("<p>- <strong>Tamanho do arquivo:</strong> " + tamanho + " bytes;</p>");
  						$(".file-info .form-group").append("<p>- <strong>Data de criação:</strong> " + data + ";</p>");
  						$(".file-info .form-group").append("<p>- <strong>Número de blocos alocados:</strong> " + numero_blocos + ".</p>");
 
  						$(".file-info").show();
+
+ 						if(FLAG_MOSTRA_ACESSO) {
+ 							FLAG_MOSTRA_ACESSO = false;
+
+ 							setTimeout(function(){
+								$(".access-button").trigger("click");
+							}, 1000);
+ 						}
  					}					
  				} else {
+ 					$(".file-info").hide();
  					alert("O arquivo não foi encontrado.");
  				}
  			}
@@ -235,10 +272,15 @@ $(document).ready(function(){
 					used_places -= main_block[0].block_count;
 
 
-					setTimeout(function(){
-						$(".delete-button").trigger("click");
-					}, 1000);
+					if(FLAG_MOSTRA_EXCLUSAO) {
+						FLAG_MOSTRA_EXCLUSAO = false;
+
+						setTimeout(function(){
+							$(".delete-button").trigger("click");
+						}, 1000);
+					}
 				} else {
+					$(".file-info").hide();
 					alert("O arquivo não foi encontrado.");
 				}
 			}
