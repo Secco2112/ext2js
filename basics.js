@@ -56,7 +56,13 @@ function get_random_position_to_insert() {
 
 
 function check_id_exists(id) {
-	return _filesystem[id].used == 1;
+	var flag = 0;
+	$.each(_filesystem, function(i, el){
+		if(el.id == id) {
+			flag = 1;
+		}
+	})
+	return flag;
 }
 
 
@@ -86,4 +92,10 @@ function get_blocks_with_id(id) {
 	}
 
 	return blocks;
+}
+
+
+function getDateTimeFromTimestamp(unixTimeStamp) {
+    var date = new Date(unixTimeStamp);
+    return ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear() + ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
 }

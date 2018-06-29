@@ -83,16 +83,17 @@ $(document).ready(function(){
 				var column_to_insert = get_first_id_column_available();
 
 				if(column_to_insert || column_to_insert==0) {
-					var tamanho = parseInt(size) / 4096;
+					var tamanho = parseInt(size) / block_size;
 					if(used_places + tamanho <= max_size) {
 						used_places += tamanho;
 
 						_filesystem[column_to_insert].used = 1;
-						_filesystem[column_to_insert].id = column_to_insert;
-						_filesystem[column_to_insert].name = name;
+						_filesystem[id].column = column_to_insert;
+						_filesystem[id].id = id;
+						_filesystem[id].name = name;
 
 						var random_color = get_random_color();
-						_filesystem[column_to_insert].color = random_color;
+						_filesystem[id].color = random_color;
 						
 						
 						
@@ -101,13 +102,15 @@ $(document).ready(function(){
 
 							// get_random_position_to_insert();
 
-							memory[position.row][position.col].id = column_to_insert;
+							memory[position.row][position.col].id = id;
 							memory[position.row][position.col].used = 1;
 							memory[position.row][position.col].name = name;
 							memory[position.row][position.col].size = size;
 							memory[position.row][position.col].block_count = tamanho;
 							memory[position.row][position.col].position = {row: position.col, col: position.row};
 							memory[position.row][position.col].color = random_color;
+							var date = new Date();
+							memory[position.row][position.col].date_time = getDateTimeFromTimestamp(date);
 							if(i==0){
 								textSize(20);
 								fill(random_color);
@@ -122,7 +125,9 @@ $(document).ready(function(){
 						}
 
 						textSize(12);
-						text("id: " + column_to_insert + "\nname: " + name, 0, column_to_insert*70, 70, 70);
+						text("id: " + id + "\nname: " + name, 0, column_to_insert*70, 70, 70);
+
+						id++;
 					} else {
 						alert("Tamanho indisponível na memória.");
 					}
@@ -135,13 +140,19 @@ $(document).ready(function(){
 	function find_data() {
  		$("#find_data").on("click", function(e){
  			var id = $("#findId").val();
-
+ 			
  			if(id) {
  				if(check_id_exists(id)) {
  					var blocks = get_blocks_with_id(id);
+ 					
+ 					if(blocks.main.length > 0) {
+ 						var tamanho = block_size * (blocks.main[0].size / block_size)
+ 						var data = blocks.main[0].date_time;
+ 						var name = blocks.main[0].name;
+ 						var numero_blocos = blocks.main[0].block_count;
 
- 					
- 					
+ 						
+ 					}					
  				} else {
  					alert("O arquivo não foi encontrado.");
  				}
@@ -165,9 +176,9 @@ $(document).ready(function(){
 					var fs_block = blocks.filesystem;
 					if(fs_block.length > 0) {
 						fs_block = fs_block[0];
-						rect(0, fs_block.id*70, 70, 70);
+						rect(0, fs_block.column*70, 70, 70);
 
-						_filesystem[fs_block.id].used = 0;
+						_filesystem[fs_block.column].used = 0;
 					}
 
 					// Bloco principal na memória
