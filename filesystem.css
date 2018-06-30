@@ -86,7 +86,7 @@
     border-bottom-color: #EEEEEE;
     background-color: #FAFAFA;
     min-height: 16.43px;
-	padding: 15px;
+	padding: 22px;
 	border-bottom: 1px solid #e5e5e5;
 }
 body {    
@@ -96,16 +96,21 @@ body {
     width: 1353px;
     margin-top: 70px;
 }
-.modal-title {
-    right: 36px;    
-    position: fixed;
-}
 .all-form {
     width: 385px;
     border: 1px solid black;    
 	padding: 21px;    
 	border-radius: 32px;
 	margin-right: 18px;
+}
+
+#inodesText {
+	position: absolute;
+    margin-top: 40px;
+}
+
+#hardDiskText {
+	margin-left: 570px;
 }
 
 .hint{
