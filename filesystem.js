@@ -44,6 +44,25 @@ $(document).ready(function(){
 	delete_data();
 
 
+	// Alimenta informações do sistema
+	var system_total_size = max_size * block_size;
+	$("#total_size").find('big').html(system_total_size.format(0, ".", ".") + " bytes");
+	$("#total_size").find('small').html('(' + system_total_size.bytes_to_size() + ')');
+
+	$("#used_size").find('big').html("0 bytes");
+	$("#used_size").find('small').html('(0 B)');
+
+	$("#free_size").find('big').html(system_total_size.format(0, ".", ".") + " bytes");
+	$("#free_size").find('small').html('(' + system_total_size.bytes_to_size() + ')');
+
+	$(function(){
+	  	$("#pieChart").drawPieChart([
+	  		{ title: "Espaço livre", value : 100, color: "#969696" },
+	    	{ title: "Espaço usado", value : 0, color: "#2C3E50" }
+	  	]);
+	});
+
+
 	// Monta e alimenta objeto do filesystem
 	for(var i=0; i<rows; i++){
 		_filesystem[i] = {};
@@ -130,7 +149,7 @@ $(document).ready(function(){
 								memory[position.row][position.col].block_count = tamanho;
 								memory[position.row][position.col].position = {row: position.col, col: position.row};
 								memory[position.row][position.col].color = random_color;
-								memory[position.row][position.col].date_time = getDateTimeFromTimestamp();
+								memory[position.row][position.col].date_time = get_date_time_from_timestamp();
 
 								textSize(20);
 								fill(random_color);
@@ -151,7 +170,7 @@ $(document).ready(function(){
 								memory[position.row][position.col].block_count = tamanho;
 								memory[position.row][position.col].position = {row: position.col, col: position.row};
 								memory[position.row][position.col].color = random_color;
-								memory[position.row][position.col].date_time = getDateTimeFromTimestamp();
+								memory[position.row][position.col].date_time = get_date_time_from_timestamp();
 
 								rect(position.row*70, position.col*70, 70, 70);
 
@@ -172,6 +191,28 @@ $(document).ready(function(){
 								$(".allocate-button").trigger("click");
 							}, 1000);
 						}
+
+
+						size = Math.floor(parseInt(size));
+
+						var used_size = $("#used_size").find('big').text().get_number();
+						used_size += size;
+						$("#used_size").find('big').html(used_size.format(0, ".", ".") + " bytes");
+						$("#used_size").find('small').html('(' + used_size.bytes_to_size() + ')');
+
+
+						var free_size = $("#free_size").find('big').text().get_number();
+						free_size -= size;
+						$("#free_size").find('big').html(free_size.format(0, ".", ".") + " bytes");
+						$("#free_size").find('small').html('(' + free_size.bytes_to_size() + ')');
+
+						$(function(){
+						  	$("#pieChart").empty().drawPieChart([
+						  		{ title: "Espaço livre", value : 80, color: "#969696" },
+						    	{ title: "Espaço usado", value : 20, color: "#2C3E50" }
+						  	]);
+						});
+
 					} else {
 						alert("Tamanho indisponível na memória.");
 					}

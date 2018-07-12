@@ -63,13 +63,42 @@
 					<button class="btn btn-primary" id="delete_data">Deletar</button>
 				</div>
 			</form>
-		</div>	
+		</div>
+		<div class="all-form">	
+			<form class="col needs-validation" method="POST" onsubmit="return false;" novalidate>
+				<h5>Informações do sistema:</h5>
+				<div class="form-group system_info">
+					<p>
+						Espaço Total: 
+						<span id="total_size">
+							<big></big>
+							<small></small>
+						</span>
+					</p>
+					<p>
+						Espaço Usado: 
+						<span id="used_size">
+							<big></big>
+							<small></small>
+						</span>
+					</p>
+					<p>
+						Espaço Livre: 
+						<span id="free_size">
+							<big></big>
+							<small></small>
+						</span>
+					</p>
+				</div>
+				<div id="pieChart" class="chart"></div>
+			</form>
+		</div>
 	</div>
 	
 	
-		<span id="inodesText">INODES<span>
+	<span id="inodesText">INODES<span>
 	
-		<span id="hardDiskText">Memória<span>
+	<span id="hardDiskText">Memória<span>
 	<!-- Modal allocate data -->
 	<div class="modal right fade" id="modalAllocate" tabindex="-1" role="dialog" aria-labelledby="modalAllocateLabel2">
 		<div class="modal-dialog" role="document">
